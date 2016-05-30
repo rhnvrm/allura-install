@@ -1,5 +1,4 @@
 all:
-	make create-users-allura:
 	make install-apt-packages
 	make install-mongodb
 	make create-directories
@@ -16,13 +15,13 @@ all:
 
 create-users-allura:
 	groupadd allura
-	useradd -G allura allura
+	useradd -g allura allura
 	passwd allura
-	mkdir /home/allura/allura-install
-	cp ./* /home/allura/allura-install/
+	mkdir -p  /home/allura/allura-install
+	cp ./* /home/allura/allura-install/ 
 	chown -R allura:allura /home/allura
 	su allura
-	cd ~/allura-install
+	cd /home/allura/allura-install
 
 install-apt-packages:
 	apt-get update
@@ -71,7 +70,7 @@ install-solr:
 		sudo ./install_solr_service.sh solr-5.3.1.tgz
 	cd /home/allura/src/allura && \
 		sudo -H -u solr bash -c 'cp -R solr_config/allura/ /var/solr/data/' && \
-		sudo service solr start
+		sudo service solr restart
 
 create-git-directory:
 	mkdir -p /srv/git && \
