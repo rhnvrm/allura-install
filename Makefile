@@ -13,7 +13,7 @@ all:
 	make update-hosts
 	make reload-apache
 
-create-users-allura:
+install:
 	groupadd allura
 	useradd -g allura allura
 	passwd allura
@@ -21,8 +21,8 @@ create-users-allura:
 	mkdir -p  /home/allura/allura-install
 	cp ./* /home/allura/allura-install/ 
 	chown -R allura:allura /home/allura
-	su allura
 	cd /home/allura/allura-install
+	sudo make all
 
 install-apt-packages:
 	apt-get update
@@ -55,13 +55,13 @@ set-permissions:
 
 install-allura-python:
 	pip install virtualenv
-	sudo -u allura virtualenv ~/env-allura
-	sudo -u allura git clone https://git-wip-us.apache.org/repos/asf/allura.git ~/src/allura
-	sudo -u allura ~/env-allura/bin/pip install -r ~/src/allura/requirements.txt
-	ln -s /usr/lib/python2.7/dist-packages/pysvn ~/env-allura/lib/python2.7/site-packages/
+	sudo -u allura virtualenv /home/allura/env-allura
+	sudo -u allura git clone https://git-wip-us.apache.org/repos/asf/allura.git /home/allura/src/allura
+	sudo -u allura /home/allura/env-allura/bin/pip install -r /home/allura/src/allura/requirements.txt
+	ln -s /usr/lib/python2.7/dist-packages/pysvn /home/env-allura/lib/python2.7/site-packages/
 	sudo -u allura sh -c '\
-		cd ~/src/allura && \
-		. ~/env-allura/bin/activate && \
+		cd /home/src/allura && \
+		. /home/allura/env-allura/bin/activate && \
 		./rebuild-all.bash'
 
 install-solr:	
@@ -79,12 +79,12 @@ create-git-directory:
 		sudo chmod 775 /srv/git
 
 initialize-allura-taskd:
-	cd ~/src/allura/Allura && \
+	cd /home/allura/src/allura/Allura && \
 		nohup paster taskd development.ini > /var/log/allura/taskd.log 2>&1 &
 
 initialize-allura-data:
-	sudo . ~/env-allura/bin/activate && \
-		cd ~/src/allura/Allura && \
+	sudo . /home/allura/env-allura/bin/activate && \
+		cd /home/allura/src/allura/Allura && \
 		sudo ALLURA_TEST_DATA=False paster setup-app development.ini
 
 copy-files:
