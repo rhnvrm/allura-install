@@ -52,8 +52,9 @@ install-allura-python:
 		. ~/env-allura/bin/activate && \
 		./rebuild-all.bash'
 
-install-solr:
+install-solr:	
 	cd ~/src && \
+		mkdir /opt && \
 		wget -nv http://archive.apache.org/dist/lucene/solr/5.3.1/solr-5.3.1.tgz && \
 		tar xvf solr-5.3.1.tgz solr-5.3.1/bin/install_solr_service.sh --strip-components=2 && \
 		sudo ./install_solr_service.sh solr-5.3.1.tgz
