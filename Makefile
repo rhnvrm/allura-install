@@ -14,10 +14,15 @@ all:
 	make update-hosts
 	make reload-apache
 
-create-user-allura:
+create-users-allura:
 	groupadd allura
 	useradd -G allura allura
 	passwd allura
+	mkdir /home/allura/allura-install
+	cp ./* /home/allura/allura-install/
+	chown -R allura:allura /home/allura
+	su allura
+	cd ~/allura-install
 
 install-apt-packages:
 	apt-get update

@@ -1,4 +1,7 @@
 #allura-install
+## Install git and make
+
+`sudo apt-get install git make`
 
 ## Create new user and user group
 
