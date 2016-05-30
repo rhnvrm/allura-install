@@ -98,6 +98,7 @@ initialize-allura-data:
 		ALLURA_TEST_DATA=False paster setup-app development.ini
 
 start:
+	chown -R allura:allura /home/allura
 	sudo -u allura sh -c '\
 		. /home/allura/env-allura/bin/activate && \
 		cd /home/allura/src/allura/Allura && \
