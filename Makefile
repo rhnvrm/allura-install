@@ -17,6 +17,7 @@ create-users-allura:
 	groupadd allura
 	useradd -g allura allura
 	passwd allura
+	usermod -aG sudo allura
 	mkdir -p  /home/allura/allura-install
 	cp ./* /home/allura/allura-install/ 
 	chown -R allura:allura /home/allura
