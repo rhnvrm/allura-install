@@ -1,4 +1,5 @@
 all:
+	make create-users-allura:
 	make install-apt-packages
 	make install-mongodb
 	make create-directories
@@ -12,6 +13,11 @@ all:
 	make set-permissions
 	make update-hosts
 	make reload-apache
+
+create-user-allura:
+	groupadd allura
+	useradd -G allura allura
+	passwd allura
 
 install-apt-packages:
 	apt-get update
@@ -35,6 +41,7 @@ create-directories:
 	mkdir -p /var/log/allura
 	mkdir -p /var/www/allura
 	mkdir -p ~/src
+	mkdir -p /opt
 
 set-permissions:
 	chown -R allura:allura /var/log/allura
@@ -53,12 +60,11 @@ install-allura-python:
 		./rebuild-all.bash'
 
 install-solr:	
-	cd ~/src && \
-		sudo mkdir -p /opt && \
+	cd /home/allura/src && \
 		wget -nv http://archive.apache.org/dist/lucene/solr/5.3.1/solr-5.3.1.tgz && \
 		tar xvf solr-5.3.1.tgz solr-5.3.1/bin/install_solr_service.sh --strip-components=2 && \
 		sudo ./install_solr_service.sh solr-5.3.1.tgz
-	cd ~/src/allura && \
+	cd /home/allura/src/allura && \
 		sudo -H -u solr bash -c 'cp -R solr_config/allura/ /var/solr/data/' && \
 		sudo service solr start
 
