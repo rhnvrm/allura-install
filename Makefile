@@ -84,6 +84,17 @@ create-git-directory:
 initialize-allura-taskd:
 	cd /home/allura/src/allura/Allura && \
 		nohup paster taskd development.ini > /var/log/allura/taskd.log 2>&1 &
+	make npm-build
+
+npm-build:
+	sudo -u allura sh -c '\
+		cd /home/allura/src/allura && \
+		. /home/allura/env-allura/bin/activate && \
+		curl --silent --location https://deb.nodesource.com/setup_4.x | sudo bash - && \
+		sudo apt-get install nodejs && \
+		cd /home/allura/src/allura && \
+		npm install && \
+		npm run build'
 
 initialize-allura-data:
 	. /home/allura/env-allura/bin/activate && \
