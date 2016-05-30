@@ -40,7 +40,6 @@ install-mongodb:
 		| tee /etc/apt/sources.list.d/mongodb.list
 	apt-get update
 	apt-get install -y mongodb-org
-	echo "smallfiles = true" | tee -a /etc/mongod.conf
 	service mongod restart
 	sleep 5
 	service mongod status
