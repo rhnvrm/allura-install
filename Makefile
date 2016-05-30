@@ -21,8 +21,9 @@ install:
 	mkdir -p  /home/allura/allura-install
 	cp ./* /home/allura/allura-install/ 
 	chown -R allura:allura /home/allura
+	chown -R allura:allura .
 	cd /home/allura/allura-install
-	sudo make all
+	make all
 
 install-apt-packages:
 	apt-get update
@@ -32,6 +33,8 @@ install-apt-packages:
 		libapache2-mod-wsgi python-pip unzip
 
 install-mongodb:
+	mkdir -p /data/db
+	sudo chown `id -u` /data/db
 	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
 	echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' \
 		| tee /etc/apt/sources.list.d/mongodb.list
@@ -56,11 +59,11 @@ set-permissions:
 install-allura-python:
 	pip install virtualenv
 	sudo -u allura virtualenv /home/allura/env-allura
-	sudo -u allura git clone https://git-wip-us.apache.org/repos/asf/allura.git /home/allura/src/allura
-	sudo -u allura /home/allura/env-allura/bin/pip install -r /home/allura/src/allura/requirements.txt
-	ln -s /usr/lib/python2.7/dist-packages/pysvn /home/env-allura/lib/python2.7/site-packages/
+	sudo -u allura sh -c 'cd / && git clone https://git-wip-us.apache.org/repos/asf/allura.git /home/allura/src/allura'
+	sudo -H -u allura sh -c 'cd / &&  /home/allura/env-allura/bin/pip install -r /home/allura/src/allura/requirements.txt'
+	ln -s /usr/lib/python2.7/dist-packages/pysvn /home/allura/env-allura/lib/python2.7/site-packages/
 	sudo -u allura sh -c '\
-		cd /home/src/allura && \
+		cd /home/allura/src/allura && \
 		. /home/allura/env-allura/bin/activate && \
 		./rebuild-all.bash'
 
@@ -83,9 +86,9 @@ initialize-allura-taskd:
 		nohup paster taskd development.ini > /var/log/allura/taskd.log 2>&1 &
 
 initialize-allura-data:
-	sudo . /home/allura/env-allura/bin/activate && \
+	. /home/allura/env-allura/bin/activate && \
 		cd /home/allura/src/allura/Allura && \
-		sudo ALLURA_TEST_DATA=False paster setup-app development.ini
+		ALLURA_TEST_DATA=False paster setup-app development.ini
 
 copy-files:
 	sudo cp allura.wsgi /var/www/allura/allura.wsgi
