@@ -89,7 +89,7 @@ npm-build:
 		curl --silent --location https://deb.nodesource.com/setup_4.x | sudo bash - && \
 		sudo apt-get install nodejs && \
 		cd /home/allura/src/allura && \
-		npm install && \
+		sudo npm install && \
 		npm run build'
 
 initialize-allura-data:
@@ -101,4 +101,4 @@ start:
 	sudo -u allura sh -c '\
 		. /home/allura/env-allura/bin/activate && \
 		cd /home/allura/src/allura/Allura && \
-		gunicorn --reload --paste --daemon development.ini'
+		gunicorn --reload --paste development.ini --daemon'
