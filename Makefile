@@ -18,7 +18,7 @@ install-apt-packages:
 	apt-get install -y \
 		git-core default-jre-headless python-dev libssl-dev libldap2-dev \
 		libsasl2-dev libjpeg8-dev zlib1g-dev subversion python-svn \
-		libapache2-mod-wsgi python-pip
+		libapache2-mod-wsgi python-pip unzip
 
 install-mongodb:
 	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
