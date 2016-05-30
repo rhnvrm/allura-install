@@ -73,21 +73,22 @@ install-solr:
 		sudo service solr restart
 
 create-git-directory:
-	mkdir -p /srv/git && \
-		chown allura /srv/git && \
-		chmod 775 /srv/git
+	sudo mkdir -p /srv/git && \
+		sudo chown allura /srv/git && \
+		sudo chmod 775 /srv/git
 
 initialize-allura-taskd:
 	cd ~/src/allura/Allura && \
 		nohup paster taskd development.ini > /var/log/allura/taskd.log 2>&1 &
 
 initialize-allura-data:
-	. ~/env-allura/bin/activate && \
+	sudo . ~/env-allura/bin/activate && \
 		cd ~/src/allura/Allura && \
-		ALLURA_TEST_DATA=False paster setup-app development.ini
+		sudo ALLURA_TEST_DATA=False paster setup-app development.ini
 
 copy-files:
 	sudo cp allura.wsgi /var/www/allura/allura.wsgi
+	sudo mkdir -p /etc/apache2/sites-enabled/
 	sudo cp allura.conf /etc/apache2/sites-enabled/allura.conf
 
 update-hosts:
