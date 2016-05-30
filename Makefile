@@ -8,10 +8,7 @@ all:
 	make create-git-directory
 	make initialize-allura-taskd
 	make initialize-allura-data
-	make copy-files
-	make set-permissions
-	make update-hosts
-	make reload-apache
+	make start
 
 install:
 	groupadd allura
@@ -30,7 +27,7 @@ install-apt-packages:
 	apt-get install -y \
 		git-core default-jre-headless python-dev libssl-dev libldap2-dev \
 		libsasl2-dev libjpeg8-dev zlib1g-dev subversion python-svn \
-		libapache2-mod-wsgi python-pip unzip
+		libapache2-mod-wsgi python-pip unzip gunicorn
 
 install-mongodb:
 	mkdir -p /data/db
@@ -100,13 +97,8 @@ initialize-allura-data:
 		cd /home/allura/src/allura/Allura && \
 		ALLURA_TEST_DATA=False paster setup-app development.ini
 
-copy-files:
-	sudo cp allura.wsgi /var/www/allura/allura.wsgi
-	sudo mkdir -p /etc/apache2/sites-enabled/
-	sudo cp allura.conf /etc/apache2/sites-enabled/allura.conf
-
-update-hosts:
-	echo -e "\n127.0.0.1 allura.dev" | tee -a /etc/hosts
-
-reload-apache:
-	service apache2 reload
+start:
+	sudo -u allura sh -c '\
+		. /home/allura/env-allura/bin/activate && \
+		cd /home/allura/src/allura/Allura && \
+		gunicorn --reload --paste --daemon development.ini'
